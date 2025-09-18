@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Form Validation</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 20px; }
+    .error { color: red; font-size: 14px; }
+    label { display: block; margin-top: 10px; }
+    input, select { padding: 5px; margin-top: 5px; width: 250px; }
+    button { margin-top: 15px; padding: 8px 15px; }
+  </style>
+</head>
+<body>
+  <h2>Registration Form</h2>
+  <form id="myForm">
+    <label>Name:
+      <input type="text" id="name" required>
+    </label>
+    <span class="error" id="nameError"></span>
+
+    <label>Email:
+      <input type="email" id="email" required>
+    </label>
+    <span class="error" id="emailError"></span>
+    <label>Phone:
+      <input type="tel" id="phone" pattern="^\d{10}$" required>
+    </label>
+    <span class="error" id="phoneError"></span>
+    <label>Username:
+      <input type="text" id="username" required>
+    </label>
+    <span class="error" id="userError"></span>
+    <label>Password:
+      <input type="password" id="password" required>
+    </label>
+    <span class="error" id="passError"></span>
+    <label>Confirm Password:
+      <input type="password" id="confirm" required>
+    </label>
+    <span class="error" id="confirmError"></span>
+    <label>Start Date:
+      <input type="date" id="start" required>
+    </label>
+    <label>End Date:
+      <input type="date" id="end" required>
+    </label>
+    <span class="error" id="dateError"></span>
+    <label>Age:
+      <input type="number" id="age" min="18" max="60" required>
+    </label>
+    <span class="error" id="ageError"></span>
+    <label>Country:
+      <select id="country" required>
+        <option value="">-- Select a country --</option>
+        <option value="India">India</option>
+        <option value="USA">USA</option>
+        <option value="UK">UK</option>
+      </select>
+    </label>
+    <span class="error" id="countryError"></span>
+    <label>Employee Code:
+      <input type="text" id="emp" pattern="^EMP-\d{4}$" 
+             title="Use format EMP-1234" required>
+    </label>
+    <span class="error" id="empError"></span>
+    <button type="submit">Submit</button>
+  </form>
+  <script>
+    document.getElementById("myForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+      let valid = true;
+      function getValue(id) { return document.getElementById(id).value.trim(); }
+      if (!getValue("name")) {
+        document.getElementById("nameError").innerText = "Name is required.";
+        valid = false;
+      } else document.getElementById("nameError").innerText = "";
+      const email = getValue("email");
+      if (!email) {
+        document.getElementById("emailError").innerText = "Email is required.";
+        valid = false;
+      } else if (!document.getElementById("email").checkValidity()) {
+        document.getElementById("emailError").innerText = "Invalid email format.";
+        valid = false;
+      } else document.getElementById("emailError").innerText = "";
+      const phone = getValue("phone");
+      if (!/^\d{10}$/.test(phone)) {
+        document.getElementById("phoneError").innerText = "Phone must be 10 digits.";
+        valid = false;
+      } else document.getElementById("phoneError").innerText = "";
+      const user = getValue("username");
+      if (!/^[A-Za-z]+$/.test(user)) {
+        document.getElementById("userError").innerText = "Letters only.";
+        valid = false;
+      } else document.getElementById("userError").innerText = "";
+      const pass = getValue("password");
+      if (pass.length < 6) {
+        document.getElementById("passError").innerText = "Password must be 6+ chars.";
+        valid = false;
+      } else document.getElementById("passError").innerText = "";
+      const confirm = getValue("confirm");
+      if (pass !== confirm) {
+        document.getElementById("confirmError").innerText = "Passwords do not match.";
+        valid = false;
+      } else document.getElementById("confirmError").innerText = "";
+      const start = new Date(document.getElementById("start").value);
+      const end = new Date(document.getElementById("end").value);
+      if (start && end && start >= end) {
+        document.getElementById("dateError").innerText = "Start must be before End.";
+        valid = false;
+      } else document.getElementById("dateError").innerText = "";
+      const age = parseInt(getValue("age"), 10);
+      if (age < 18 || age > 60 || isNaN(age)) {
+        document.getElementById("ageError").innerText = "Age must be 18–60.";
+        valid = false;
+      } else document.getElementById("ageError").innerText = "";
+      if (document.getElementById("country").value === "") {
+        document.getElementById("countryError").innerText = "Select a country.";
+        valid = false;
+      } else document.getElementById("countryError").innerText = "";
+      const emp = getValue("emp");
+      if (!/^EMP-\d{4}$/.test(emp)) {
+        document.getElementById("empError").innerText = "Use format EMP-1234.";
+        valid = false;
+      } else document.getElementById("empError").innerText = "";
+      if (valid) {
+        alert("Form submitted successfully!");
+        this.submit();
+      }
+    });
+  </script>
+</body>
+</html>
